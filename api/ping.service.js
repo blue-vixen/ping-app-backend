@@ -1,5 +1,6 @@
 const dbService = require('../services/db.service')
 const util = require('util')
+const { ObjectId } = require('mongodb')
 const exec = util.promisify(require('child_process').exec)
 
 const ping = async (count, host) => {
@@ -39,17 +40,30 @@ const updateHost = async (result, count, hostToUpdate) => {
     const collection = await dbService.getCollection('history')
     await collection.updateOne({ "_id": hostToUpdate._id }, { $set: { ...hostToUpdate } })
     return hostToUpdate
+    // try {
+    //     const hostToSave = host
+    //     hostToSave._id = ObjectId(host._id)
+    //     const collection = await dbService.getCollection('history')
+    //     await collection.updateOne({ _id: hostToSave._id }, { $set: hostToSave })
+    //     return hostToSave
+
+    // } catch (error) {
+    //     console.log(error)
+    //     throw error
+    // }
 }
 
 const getTopHosts = async () => {
     const collection = await dbService.getCollection('history')
-    const topHosts = await collection.aggregate(
-        [
-            { $sort: { 'pingCount': -1 } },
-            { $limit: 5 }
-        ]
-    ).toArray()
-    return topHosts
+    // const topHosts = await collection.aggregate(
+    //     [
+    //         { $sort: { 'pingCount': -1 } },
+    //         { $limit: 5 }
+    //     ]
+    // ).toArray()
+    // return topHosts
+    const hosts = await collection.find().toArray()
+    return hosts
 }
 
 getTopHosts()
