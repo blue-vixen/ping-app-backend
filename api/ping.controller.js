@@ -12,12 +12,11 @@ async function onPing(req, res) {
     }
 }
 
-async function getTopHosts(req, res) {
+async function getHosts(req, res) {
     console.log('getting hosts')
     try {
-        const topHosts = await pingService.getTopHosts()
-        console.log(topHosts)
-        res.send(topHosts)
+        const hosts = await pingService.getHosts()
+        res.send(hosts)
     } catch (error) {
         console.log(error)
     }
@@ -25,5 +24,5 @@ async function getTopHosts(req, res) {
 
 module.exports = {
     onPing,
-    getTopHosts
+    getHosts
 }

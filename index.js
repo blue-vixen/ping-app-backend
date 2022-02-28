@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'production') {
 const pingRoutes = require('./api/ping.routes')
 
 app.use('/api', pingRoutes)
-app.use('/api/tophosts', pingRoutes)
+app.use('/api/hosts', pingRoutes)
 
 
 app.get('/**', (req, res) => {

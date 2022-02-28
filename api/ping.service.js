@@ -6,8 +6,10 @@ const exec = util.promisify(require('child_process').exec)
 const ping = async (count, host) => {
     console.log(`ping from server service ${count} ${host}`)
     const { stdout, stderr } = await exec(`ping -n ${count} ${host}`)
-    updateHistory(stdout || stderr, count, host)
-    return stdout || stderr
+    const updatedHost = updateHistory(stdout || stderr, count, host)
+    console.log('here')
+    return updatedHost
+    // return stdout || stderr
 }
 
 const updateHistory = async (result, count, hostToFind) => {
@@ -29,8 +31,9 @@ const addHost = async (result, count, host) => {
         requests: [result]
     }
     const collection = await dbService.getCollection('history')
-    const addedHost = await collection.insertOne(hostToAdd)
-    return addedHost
+    const newId = await collection.insertOne(hostToAdd)
+    hostToAdd._id = newId.insertedId.toString()
+    return hostToAdd
 }
 
 const updateHost = async (result, count, hostToUpdate) => {
@@ -53,7 +56,7 @@ const updateHost = async (result, count, hostToUpdate) => {
     // }
 }
 
-const getTopHosts = async () => {
+const getHosts = async () => {
     const collection = await dbService.getCollection('history')
     // const topHosts = await collection.aggregate(
     //     [
@@ -66,9 +69,7 @@ const getTopHosts = async () => {
     return hosts
 }
 
-getTopHosts()
-
 module.exports = {
     ping,
-    getTopHosts
+    getHosts
 }
