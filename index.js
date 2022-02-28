@@ -1,10 +1,11 @@
 const express = require('express')
 const cors = require('cors')
-
+const path = require('path');
 const app = express()
-// const http = require('http').createServer(app)
+const http = require('http').createServer(app)
 
 app.use(express.json())
+app.use(express.static('public'))
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'public')))
@@ -27,7 +28,7 @@ app.get('/**', (req, res) => {
 })
 
 const port = process.env.PORT || 3030
-app.listen(port, () => {
+http.listen(port, () => {
     console.log('Server is running on port: ' + port)
 })
 
